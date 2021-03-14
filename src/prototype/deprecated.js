@@ -1,7 +1,5 @@
 /*------------------------------- DEPRECATED -------------------------------*/
 
-Hash.toQueryString = Object.toQueryString;
-
 Element.addMethods({
   childOf: Element.Methods.descendantOf
 });
