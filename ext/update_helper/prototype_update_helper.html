@@ -90,9 +90,6 @@
     },
 
     testDisplay: function() {
-      Toggle.display('foo');
-      this.assertInfoNotified('Toggle.display has been deprecated, please use Element.toggle instead.');
-        
       Element.show('foo', 'bar', 'bla');
       this.assertErrorNotified('Passing an arbitrary number of elements to Element.show is no longer supported.\n' +
         'Use [id_1, id_2, ...].each(Element.show) or $(id_1, id_2, ...).invoke("show") instead.');

@@ -22,12 +22,6 @@
 
 var prototypeUpdateHelper = new UpdateHelper([
   {
-    methodName: 'display',
-    namespace: Toggle,
-    message: 'Toggle.display has been deprecated, please use Element.toggle instead.'
-  },
-  
-  {
     methodName: 'show',
     namespace: Element.Methods,
     message: 'Passing an arbitrary number of elements to Element.show is no longer supported.\n' +

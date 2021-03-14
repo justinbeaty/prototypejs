@@ -2,8 +2,6 @@
 
 Hash.toQueryString = Object.toQueryString;
 
-var Toggle = { display: Element.toggle };
-
 Element.addMethods({
   childOf: Element.Methods.descendantOf
 });
