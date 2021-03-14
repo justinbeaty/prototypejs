@@ -1,12 +1,12 @@
 (function(GLOBAL) {
 
-  var UNDEFINED;
-  var SLICE = Array.prototype.slice;
+  let UNDEFINED;
+  const SLICE = Array.prototype.slice;
 
   // Try to reuse the same created element as much as possible. We'll use
   // this DIV for capability checks (where possible) and for normalizing
   // HTML content.
-  var DIV = document.createElement('div');
+  const DIV = document.createElement( 'div' );
 
   /** section: DOM
    * class Element
@@ -86,7 +86,7 @@
 
 
   // The cache for all our created elements.
-  var ELEMENT_CACHE = {};
+  let ELEMENT_CACHE = {};
 
   // For performance reasons, we create new elements by cloning a "blank"
   // version of a given element. But sometimes this causes problems. Skip
@@ -99,7 +99,6 @@
     if ('type' in attributes) return false;
     return true;
   }
-
 
   /**
    *  new Element(tagName[, attributes])
@@ -122,8 +121,9 @@
    *
    *      // The new way:
    *      var a = new Element('a', { 'class': 'foo', href: '/foo.html' }).update("Next page");
-  **/
-  var oldElement = GLOBAL.Element;
+   **/
+  const oldElement = GLOBAL.Element;
+
   function Element(tagName, attributes) {
     attributes = attributes || {};
     tagName = tagName.toLowerCase();
@@ -131,8 +131,8 @@
     if (!ELEMENT_CACHE[tagName])
       ELEMENT_CACHE[tagName] = document.createElement(tagName);
 
-    var node = shouldUseCreationCache(tagName, attributes) ?
-     ELEMENT_CACHE[tagName].cloneNode(false) : document.createElement(tagName);
+    const node = shouldUseCreationCache( tagName, attributes ) ?
+        ELEMENT_CACHE[ tagName ].cloneNode( false ) : document.createElement( tagName );
 
     return Element.writeAttribute(node, attributes);
   }
@@ -164,7 +164,7 @@
 
   // Temporary object for holding all our initial element methods. We'll add
   // them all at once at the bottom of this file.
-  var methods = {};
+  let methods = {};
 
   /**
    *  Element.inspect(@element) -> String
@@ -191,14 +191,15 @@
    *
    *      $('mutsu').next().inspect();
    *      // -> '<li>'
-  **/
-  var INSPECT_ATTRIBUTES = { id: 'id', className: 'class' };
+   **/
+  const INSPECT_ATTRIBUTES = { id: 'id', className: 'class' };
+
   function inspect(element) {
     element = $(element);
-    var result = '<' + element.tagName.toLowerCase();
+    let result = '<' + element.tagName.toLowerCase();
 
-    var attribute, value;
-    for (var property in INSPECT_ATTRIBUTES) {
+    let attribute, value;
+    for ( let property in INSPECT_ATTRIBUTES) {
       attribute = INSPECT_ATTRIBUTES[property];
       value = (element[property] || '').toString();
       if (value) result += ' ' + attribute + '=' + value.inspect(true);
@@ -452,34 +453,37 @@
   }
 
   // see: http://support.microsoft.com/kb/276228
-  var SELECT_ELEMENT_INNERHTML_BUGGY = (function(){
-    var el = document.createElement("select"),
+  const SELECT_ELEMENT_INNERHTML_BUGGY = ( function()
+  {
+    let el = document.createElement( 'select' ),
         isBuggy = true;
-    el.innerHTML = "<option value=\"test\">test</option>";
-    if (el.options && el.options[0]) {
-      isBuggy = el.options[0].nodeName.toUpperCase() !== "OPTION";
+    el.innerHTML = '<option value="test">test</option>';
+    if( el.options && el.options[ 0 ] ) {
+      isBuggy = el.options[ 0 ].nodeName.toUpperCase() !== 'OPTION';
     }
     el = null;
     return isBuggy;
-  })();
+  } )();
 
   // see: http://msdn.microsoft.com/en-us/library/ms533897(VS.85).aspx
-  var TABLE_ELEMENT_INNERHTML_BUGGY = (function(){
+  const TABLE_ELEMENT_INNERHTML_BUGGY = ( function()
+  {
     try {
-      var el = document.createElement("table");
-      if (el && el.tBodies) {
-        el.innerHTML = "<tbody><tr><td>test</td></tr></tbody>";
-        var isBuggy = typeof el.tBodies[0] == "undefined";
+      let el = document.createElement( 'table' );
+      if( el && el.tBodies ) {
+        el.innerHTML = '<tbody><tr><td>test</td></tr></tbody>';
+        const isBuggy = typeof el.tBodies[ 0 ] == 'undefined';
         el = null;
         return isBuggy;
       }
-    } catch (e) {
+    }
+    catch( e ) {
       return true;
     }
-  })();
+  } )();
 
-  var ANY_INNERHTML_BUGGY = SELECT_ELEMENT_INNERHTML_BUGGY ||
-   TABLE_ELEMENT_INNERHTML_BUGGY;
+  const ANY_INNERHTML_BUGGY = SELECT_ELEMENT_INNERHTML_BUGGY ||
+      TABLE_ELEMENT_INNERHTML_BUGGY;
 
   /**
    *  Element.update(@element[, newContent]) -> Element
@@ -588,14 +592,14 @@
 
 
     content = Object.toHTML(content);
-    var tagName = element.tagName.toUpperCase();
+    const tagName = element.tagName.toUpperCase();
 
     if (ANY_INNERHTML_BUGGY) {
       if (tagName in INSERTION_TRANSLATIONS.tags) {
         while (element.firstChild)
           element.removeChild(element.firstChild);
 
-        var nodes = getContentFromAnonymousElement(tagName, content.stripScripts());
+        const nodes = getContentFromAnonymousElement( tagName, content.stripScripts() );
         for (var i = 0, node; node = nodes[i]; i++)
           element.appendChild(node);
 
@@ -687,7 +691,7 @@
       content = content.toElement();
     } else if (!Object.isElement(content)) {
       content = Object.toHTML(content);
-      var range = element.ownerDocument.createRange();
+      const range = element.ownerDocument.createRange();
       range.selectNode(element);
       content.evalScripts.bind(content).defer();
       content = range.createContextualFragment(content.stripScripts());
@@ -720,7 +724,7 @@
     }
   };
 
-  var tags = INSERTION_TRANSLATIONS.tags;
+  const tags = INSERTION_TRANSLATIONS.tags;
 
   Object.extend(tags, {
     THEAD: tags.TBODY,
@@ -743,7 +747,7 @@
   // content insertions.
   function insertContentAt(element, content, position) {
     position   = position.toLowerCase();
-    var method = INSERTION_TRANSLATIONS[position];
+    const method = INSERTION_TRANSLATIONS[ position ];
 
     if (content && content.toElement) content = content.toElement();
     if (Object.isElement(content)) {
@@ -752,14 +756,15 @@
     }
 
     content = Object.toHTML(content);
-    var tagName = ((position === 'before' || position === 'after') ?
-     element.parentNode : element).tagName.toUpperCase();
+    const tagName = ( ( position === 'before' || position === 'after' ) ?
+        element.parentNode : element ).tagName.toUpperCase();
 
-    var childNodes = getContentFromAnonymousElement(tagName, content.stripScripts());
+    const childNodes = getContentFromAnonymousElement( tagName, content.stripScripts() );
 
     if (position === 'top' || position === 'after') childNodes.reverse();
 
-    for (var i = 0, node; node = childNodes[i]; i++)
+    let i = 0, node;
+    for (; node = childNodes[i]; i++)
       method(element, node);
 
     content.evalScripts.bind(content).defer();
@@ -816,7 +821,7 @@
     if (isContent(insertions))
       insertions = { bottom: insertions };
 
-    for (var position in insertions)
+    for ( let position in insertions)
       insertContentAt(element, insertions[position], position);
 
     return element;
@@ -957,10 +962,10 @@
   **/
   function cleanWhitespace(element) {
     element = $(element);
-    var node = element.firstChild;
+    let node = element.firstChild;
 
     while (node) {
-      var nextNode = node.nextSibling;
+      const nextNode = node.nextSibling;
       if (node.nodeType === Node.TEXT_NODE && !/\S/.test(node.nodeValue))
         element.removeChild(node);
       node = nextNode;
@@ -993,9 +998,9 @@
   // tags. So we wrap the string with enclosing HTML (if necessary), stick it
   // in a DIV, then grab the DOM nodes.
   function getContentFromAnonymousElement(tagName, html, force) {
-    var t = INSERTION_TRANSLATIONS.tags[tagName], div = DIV;
+    let t = INSERTION_TRANSLATIONS.tags[ tagName ], div = DIV;
 
-    var workaround = !!t;
+    let workaround = !!t;
     if (!workaround && force) {
       workaround = true;
       t = ['', '', 0];
@@ -1004,7 +1009,7 @@
     if (workaround) {
       div.innerHTML = '&#160;' + t[0] + html + t[1];
       div.removeChild(div.firstChild);
-      for (var i = t[2]; i--; )
+      for ( let i = t[2]; i--; )
         div = div.firstChild;
     } else {
       div.innerHTML = html;
@@ -1042,11 +1047,11 @@
   **/
   function clone(element, deep) {
     if (!(element = $(element))) return;
-    var clone = element.cloneNode(deep);
+    const clone = element.cloneNode( deep );
     clone._prototypeUID = UNDEFINED;
     if (deep) {
-      var descendants = Element.select(clone, '*'),
-       i = descendants.length;
+      const descendants = Element.select( clone, '*' );
+      let i = descendants.length;
       while (i--)
         descendants[i]._prototypeUID = UNDEFINED;
     }
@@ -1055,7 +1060,7 @@
 
   // Performs cleanup on a single element before it is removed from the page.
   function purgeElement(element) {
-    var uid = getUniqueElementID(element);
+    const uid = getUniqueElementID( element );
     if (uid) {
       Element.stopObserving(element);
       element._prototypeUID = UNDEFINED;
@@ -1075,8 +1080,8 @@
     if (!(element = $(element))) return;
     purgeElement(element);
 
-    var descendants = element.getElementsByTagName('*'),
-     i = descendants.length;
+    const descendants = element.getElementsByTagName( '*' );
+    let i = descendants.length;
 
     while (i--) purgeElement(descendants[i]);
 
@@ -1140,7 +1145,7 @@
   function recursivelyCollect(element, property, maximumLength) {
     element = $(element);
     maximumLength = maximumLength || -1;
-    var elements = [];
+    const elements = [];
 
     while (element = element[property]) {
       if (element.nodeType === Node.ELEMENT_NODE)
@@ -1246,7 +1251,8 @@
    *  **This method is deprecated, please see [[Element.childElements]]**.
   **/
   function immediateDescendants(element) {
-    var results = [], child = $(element).firstChild;
+    const results = [];
+    let child = $( element ).firstChild;
 
     while (child) {
       if (child.nodeType === Node.ELEMENT_NODE)
@@ -1370,8 +1376,8 @@
   **/
   function siblings(element) {
     element = $(element);
-    var previous = previousSiblings(element),
-     next = nextSiblings(element);
+    const previous = previousSiblings( element ),
+        next = nextSiblings( element );
     return previous.reverse().concat(next);
   }
 
@@ -1919,7 +1925,7 @@
   **/
   function select(element) {
     element = $(element);
-    var expressions = SLICE.call(arguments, 1).join(', ');
+    const expressions = SLICE.call( arguments, 1 ).join( ', ' );
     return Prototype.Selector.select(expressions, element);
   }
 
@@ -1955,9 +1961,10 @@
   **/
   function adjacent(element) {
     element = $(element);
-    var expressions = SLICE.call(arguments, 1).join(', ');
-    var siblings = Element.siblings(element), results = [];
-    for (var i = 0, sibling; sibling = siblings[i]; i++) {
+    const expressions = SLICE.call( arguments, 1 ).join( ', ' );
+    const siblings = Element.siblings( element ), results = [];
+    let i = 0, sibling;
+    for (; sibling = siblings[i]; i++) {
       if (Prototype.Selector.match(sibling, expressions))
         results.push(sibling);
     }
@@ -2089,11 +2096,12 @@
    *          <li id="apple">apple</li>
    *          <li id="anonymous_element_1">orange</li>
    *        </ul>
-  **/
-  var idCounter = 1;
+   **/
+  let idCounter = 1;
+
   function identify(element) {
     element = $(element);
-    var id = Element.readAttribute(element, 'id');
+    let id = Element.readAttribute( element, 'id' );
     if (id) return id;
 
     // The element doesn't have an ID of its own. Give it one, first ensuring
@@ -2142,7 +2150,8 @@
   **/
   function writeAttribute(element, name, value) {
     element = $(element);
-    var attributes = {}, table = ATTRIBUTE_TRANSLATIONS.write;
+    let attributes = {};
+    const table = ATTRIBUTE_TRANSLATIONS.write;
 
     if (typeof name === 'object') {
       attributes = name;
@@ -2150,7 +2159,7 @@
       attributes[name] = Object.isUndefined(value) ? true : value;
     }
 
-    for (var attr in attributes) {
+    for ( let attr in attributes) {
       name = table.names[attr] || attr;
       value = attributes[attr];
       if (table.values[attr]) {
@@ -2174,7 +2183,7 @@
 
   function hasAttribute(element, attribute) {
     attribute = ATTRIBUTE_TRANSLATIONS.has[attribute] || attribute;
-    var node = $(element).getAttributeNode(attribute);
+    const node = $( element ).getAttributeNode( attribute );
     return !!(node && node.specified);
   }
 
@@ -2303,9 +2312,10 @@
   var ATTRIBUTE_TRANSLATIONS = {};
 
   // Test attributes.
-  var classProp = 'class', forProp = 'for';
+  const classProp = 'class';
+  let forProp = 'for';
 
-  var LABEL = document.createElement('label');
+  let LABEL = document.createElement( 'label' );
   LABEL.setAttribute(forProp, 'x');
   if (LABEL.htmlFor !== 'x') {
     LABEL.setAttribute('htmlFor', 'x');
@@ -2323,7 +2333,7 @@
   }
 
   function _getAttrNode(element, attribute) {
-    var node = element.getAttributeNode(attribute);
+    const node = element.getAttributeNode( attribute );
     return node ? node.value : '';
   }
 
@@ -2333,15 +2343,15 @@
 
   // Test whether attributes like `onclick` have their values serialized.
   DIV.onclick = Prototype.emptyFunction;
-  var onclickValue = DIV.getAttribute('onclick');
+  const onclickValue = DIV.getAttribute( 'onclick' );
 
-  var _getEv;
+  let _getEv;
 
   // IE >=8
   if (onclickValue === '') {
     // only function body is serialized
     _getEv = function(element, attribute) {
-      var value = element.getAttribute(attribute);
+      const value = element.getAttribute( attribute );
       if (!value) return null;
       return value.strip();
     };
@@ -2395,8 +2405,8 @@
   Object.extend(ATTRIBUTE_TRANSLATIONS.write.names,
    ATTRIBUTE_TRANSLATIONS.read.names);
 
-  var CAMEL_CASED_ATTRIBUTE_NAMES = $w('colSpan rowSpan vAlign dateTime ' +
-   'accessKey tabIndex encType maxLength readOnly longDesc frameBorder');
+  const CAMEL_CASED_ATTRIBUTE_NAMES = $w( 'colSpan rowSpan vAlign dateTime ' +
+      'accessKey tabIndex encType maxLength readOnly longDesc frameBorder' );
 
   for (var i = 0, attr; attr = CAMEL_CASED_ATTRIBUTE_NAMES[i]; i++) {
     ATTRIBUTE_TRANSLATIONS.write.names[attr.toLowerCase()] = attr;
@@ -2447,8 +2457,6 @@
 
   // STYLES
   function normalizeStyleName(style) {
-    if (style === 'float' || style === 'styleFloat')
-      return 'cssFloat';
     return style.camelize();
   }
 
@@ -2493,28 +2501,25 @@
   **/
   function setStyle(element, styles) {
     element = $(element);
-    var elementStyle = element.style;
+    const elementStyle = element.style;
 
     if (Object.isString(styles)) {
       // Set the element's CSS text directly.
       elementStyle.cssText += ';' + styles;
       if (styles.include('opacity')) {
-        var opacity = styles.match(/opacity:\s*(\d?\.?\d*)/)[1];
+        const opacity = styles.match( /opacity:\s*(\d?\.?\d*)/ )[ 1 ];
         Element.setOpacity(element, opacity);
       }
       return element;
     }
 
-    for (var property in styles) {
+    for ( let property in styles) {
       if (property === 'opacity') {
         Element.setOpacity(element, styles[property]);
       } else {
-        var value = styles[property];
-        if (property === 'float' || property === 'cssFloat') {
-          // Browsers disagree on whether this should be called `cssFloat`
-          // or `styleFloat`. Check both.
-          property = Object.isUndefined(elementStyle.styleFloat) ?
-           'cssFloat' : 'styleFloat';
+        const value = styles[ property ];
+        if (property === 'cssFloat') {
+          property = 'float';
         }
         elementStyle[property] = value;
       }
@@ -2577,13 +2582,13 @@
   function getStyle(element, style) {
     element = $(element);
     style = normalizeStyleName(style);
-    var doc = element.ownerDocument;
+    const doc = element.ownerDocument;
 
     // Try inline styles first.
-    var value = element.style[style];
+    let value = element.style[ style ];
     if (!value || value === 'auto') {
       // Reluctantly retrieve the computed style.
-      var css = doc.defaultView.getComputedStyle(element, null);
+      const css = doc.defaultView.getComputedStyle( element, null );
       value = css ? css[style] : null;
     }
 
@@ -2658,7 +2663,7 @@
   function getStorage(element) {
     if (!(element = $(element))) return;
 
-    var uid = getUniqueElementID(element);
+    const uid = getUniqueElementID( element );
 
     if (!Element.Storage[uid])
       Element.Storage[uid] = $H();
@@ -2678,7 +2683,7 @@
   **/
   function store(element, key, value) {
     if (!(element = $(element))) return;
-    var storage = getStorage(element);
+    const storage = getStorage( element );
     if (arguments.length === 2) {
       // Assume we've been passed an object full of key/value pairs.
       storage.update(key);
@@ -2698,7 +2703,8 @@
   **/
   function retrieve(element, key, defaultValue) {
     if (!(element = $(element))) return;
-    var storage = getStorage(element), value = storage.get(key);
+    const storage = getStorage( element );
+    let value = storage.get( key );
 
     if (Object.isUndefined(value)) {
       storage.set(key, defaultValue);
@@ -2716,7 +2722,7 @@
 
 
   // ELEMENT EXTENSION
-  var ByTag = Element.Methods.ByTag;
+  const ByTag = Element.Methods.ByTag;
 
   /**
    *  Element.extend(element) -> Element
@@ -2741,8 +2747,8 @@
    *  is an `input`, `textarea`, or `select` element, it will also be extended
    *  with the methods from `Form.Element.Methods`. If it is a `form` element, it
    *  will also be extended with the methods from `Form.Methods`.
-  **/
-  var extend = Prototype.K;
+   **/
+  const extend = Prototype.K;
 
   function addMethodsToTagName(tagName, methods) {
     tagName = tagName.toUpperCase();
@@ -2752,8 +2758,8 @@
 
   function mergeMethods(destination, methods, onlyIfAbsent) {
     if (Object.isUndefined(onlyIfAbsent)) onlyIfAbsent = false;
-    for (var property in methods) {
-      var value = methods[property];
+    for ( let property in methods) {
+      const value = methods[ property ];
       if (!Object.isFunction(value)) continue;
       if (!onlyIfAbsent || !(property in destination))
         destination[property] = value.methodize();
@@ -2761,17 +2767,17 @@
   }
 
   function findDOMClass(tagName) {
-    var klass;
-    var trans = {
-      "OPTGROUP": "OptGroup", "TEXTAREA": "TextArea", "P": "Paragraph",
-      "FIELDSET": "FieldSet", "UL": "UList", "OL": "OList", "DL": "DList",
-      "DIR": "Directory", "H1": "Heading", "H2": "Heading", "H3": "Heading",
-      "H4": "Heading", "H5": "Heading", "H6": "Heading", "Q": "Quote",
-      "INS": "Mod", "DEL": "Mod", "A": "Anchor", "IMG": "Image", "CAPTION":
-      "TableCaption", "COL": "TableCol", "COLGROUP": "TableCol", "THEAD":
-      "TableSection", "TFOOT": "TableSection", "TBODY": "TableSection", "TR":
-      "TableRow", "TH": "TableCell", "TD": "TableCell", "FRAMESET":
-      "FrameSet", "IFRAME": "IFrame"
+    let klass;
+    const trans = {
+      'OPTGROUP': 'OptGroup', 'TEXTAREA': 'TextArea', 'P': 'Paragraph',
+      'FIELDSET': 'FieldSet', 'UL': 'UList', 'OL': 'OList', 'DL': 'DList',
+      'DIR': 'Directory', 'H1': 'Heading', 'H2': 'Heading', 'H3': 'Heading',
+      'H4': 'Heading', 'H5': 'Heading', 'H6': 'Heading', 'Q': 'Quote',
+      'INS': 'Mod', 'DEL': 'Mod', 'A': 'Anchor', 'IMG': 'Image', 'CAPTION':
+          'TableCaption', 'COL': 'TableCol', 'COLGROUP': 'TableCol', 'THEAD':
+          'TableSection', 'TFOOT': 'TableSection', 'TBODY': 'TableSection', 'TR':
+          'TableRow', 'TH': 'TableCell', 'TD': 'TableCell', 'FRAMESET':
+          'FrameSet', 'IFRAME': 'IFrame'
     };
     if (trans[tagName]) klass = 'HTML' + trans[tagName] + 'Element';
     if (window[klass]) return window[klass];
@@ -2780,8 +2786,8 @@
     klass = 'HTML' + tagName.capitalize() + 'Element';
     if (window[klass]) return window[klass];
 
-    var element = document.createElement(tagName),
-     proto = element['__proto__'] || element.constructor.prototype;
+    let element = document.createElement( tagName );
+    const proto = element[ '__proto__' ] || element.constructor.prototype;
 
     element = null;
     return proto;
@@ -2935,7 +2941,7 @@
     mergeMethods(HTMLElement.prototype, Element.Methods.Simulated, true);
 
     for (var tag in Element.Methods.ByTag) {
-      var klass = findDOMClass(tag);
+      const klass = findDOMClass( tag );
       if (Object.isUndefined(klass)) continue;
       mergeMethods(klass.prototype, ByTag[tag]);
     }
