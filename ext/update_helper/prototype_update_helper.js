@@ -65,12 +65,6 @@ var prototypeUpdateHelper = new UpdateHelper([
     type: 'error',
     condition: function() { return arguments.length > 1 && !Object.isNumber(arguments[1]) }
   },
-  
-  {
-    methodName: 'childOf',
-    namespace: Element.Methods,
-    message: 'Element#childOf has been deprecated, please use Element#descendantOf instead.'
-  },
 
   {
     methodName: 'initialize',

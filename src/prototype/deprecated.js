@@ -1,11 +1,5 @@
 /*------------------------------- DEPRECATED -------------------------------*/
 
-Element.addMethods({
-  childOf: Element.Methods.descendantOf
-});
-
-/*--------------------------------------------------------------------------*/
-
 Element.ClassNames = Class.create();
 Element.ClassNames.prototype = {
   initialize: function(element) {

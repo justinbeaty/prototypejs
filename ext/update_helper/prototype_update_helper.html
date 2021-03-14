@@ -141,9 +141,6 @@
     },
     
     testDomSelectors: function() {
-      Element.childOf('foo', 'bar');
-      this.assertInfoNotified('Element#childOf has been deprecated, please use Element#descendantOf instead.');
-
       $('foo').immediateDescendants();
       this.assertInfoNotified('Element#immediateDescendants has been deprecated, please use Element#childElements instead.');
       

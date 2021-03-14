@@ -120,7 +120,6 @@ suite('DOM', function () {
 
     assert.strictEqual(elt, $(elt));
     assert.respondsTo('hide', elt);
-    assert.respondsTo('childOf', elt);
   });
 
 
@@ -852,14 +851,6 @@ suite('DOM', function () {
      'descendantOf(document) should behave predictably');
     assert(document.documentElement.descendantOf(document),
      'descendantOf(document) should behave predictably');
-  });
-
-  test('#childOf', function () {
-    assert($('child').childOf('ancestor'));
-    assert($('child').childOf($('ancestor')));
-    assert($('great-grand-child').childOf('ancestor'));
-    assert(!$('great-grand-child').childOf('not-in-the-family'));
-    assert.strictEqual(Element.Methods.childOf, Element.Methods.descendantOf);
   });
 
   test('#setStyle', function () {
