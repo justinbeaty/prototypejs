@@ -241,9 +241,7 @@ function $w(string) {
    *      // copy -> ['A', 'B', 'C'];
   **/
   function compact() {
-    return this.select(function(value) {
-      return value != null;
-    });
+    return this.filter( value => value != null );
   }
 
   /**
@@ -289,9 +287,7 @@ function $w(string) {
   **/
   function without() {
     var values = slice.call(arguments, 0);
-    return this.select(function(value) {
-      return !values.include(value);
-    });
+    return this.filter( value => !values.includes(value));
   }
 
   /**
