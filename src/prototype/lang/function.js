@@ -42,100 +42,6 @@ Object.extend(Function.prototype, (function() {
     return names.length == 1 && !names[0] ? [] : names;
   }
 
-  /** related to: Function#bindAsEventListener
-   *  Function#bind(context[, args...]) -> Function
-   *  - context (Object): The object to bind to.
-   *  - args (?): Optional additional arguments to curry for the function.
-   *
-   *  Binds this function to the given `context` by wrapping it in another
-   *  function and returning the wrapper. Whenever the resulting "bound"
-   *  function is called, it will call the original ensuring that `this` is set
-   *  to `context`. Also optionally curries arguments for the function.
-   *
-   *  `Function#bind` acts as an ECMAScript 5 [polyfill](http://remysharp.com/2010/10/08/what-is-a-polyfill/).
-   *  It is only defined if not already present in the user's browser, and it
-   *  is meant to behave like the native version as much as possible. Consult
-   *  the [ES5 specification](http://es5.github.com/#x15.3.4.5) for more
-   *  information.
-   *
-   *  ##### Examples
-   *
-   *  A typical use of [[Function#bind]] is to ensure that a callback (event
-   *  handler, etc.) that is an object method gets called with the correct
-   *  object as its context (`this` value):
-   *
-   *      var AlertOnClick = Class.create({
-   *        initialize: function(msg) {
-   *          this.msg = msg;
-   *        },
-   *        handleClick: function(event) {
-   *          event.stop();
-   *          alert(this.msg);
-   *        }
-   *      });
-   *      var myalert = new AlertOnClick("Clicked!");
-   *      $('foo').observe('click', myalert.handleClick); // <= WRONG
-   *      // -> If 'foo' is clicked, the alert will be blank; "this" is wrong
-   *      $('bar').observe('click', myalert.handleClick.bind(myalert)); // <= RIGHT
-   *      // -> If 'bar' is clicked, the alert will be "Clicked!"
-   *
-   *  `bind` can also *curry* (burn in) arguments for the function if you
-   *  provide them after the `context` argument:
-   *
-   *      var Averager = Class.create({
-   *        initialize: function() {
-   *          this.count = 0;
-   *          this.total = 0;
-   *        },
-   *        add: function(addend) {
-   *          ++this.count;
-   *          this.total += addend;
-   *        },
-   *        getAverage: function() {
-   *          return this.count == 0 ? NaN : this.total / this.count;
-   *        }
-   *      });
-   *      var a = new Averager();
-   *      var b = new Averager();
-   *      var aAdd5 = a.add.bind(a, 5);   // Bind to a, curry 5
-   *      var aAdd10 = a.add.bind(a, 10); // Bind to a, curry 10
-   *      var bAdd20 = b.add.bind(b, 20); // Bind to b, curry 20
-   *      aAdd5();
-   *      aAdd10();
-   *      bAdd20();
-   *      bAdd20();
-   *      alert(a.getAverage());
-   *      // -> Alerts "7.5" (average of [5, 10])
-   *      alert(b.getAverage());
-   *      // -> Alerts "20" (average of [20, 20])
-   *
-   *  (To curry without binding, see [[Function#curry]].)
-  **/
-
-  function bind(context) {
-    if (arguments.length < 2 && Object.isUndefined(arguments[0]))
-      return this;
-
-    if (!Object.isFunction(this))
-      throw new TypeError("The object is not callable.");
-      
-    var nop = function() {};
-    var __method = this, args = slice.call(arguments, 1);
-    
-    var bound = function() {
-      var a = merge(args, arguments);
-      // Ignore the supplied context when the bound function is called with
-      // the "new" keyword.
-      var c = this instanceof bound ? this : context;
-      return __method.apply(c, a);
-    };
-        
-    nop.prototype   = this.prototype;
-    bound.prototype = new nop();
-
-    return bound;
-  }
-
   /** related to: Function#bind
    *  Function#bindAsEventListener(context[, args...]) -> Function
    *  - context (Object): The object to bind to.
@@ -408,9 +314,6 @@ Object.extend(Function.prototype, (function() {
     wrap:                wrap,
     methodize:           methodize
   };
-  
-  if (!Function.prototype.bind)
-    extensions.bind = bind;
 
   return extensions;
 })());
