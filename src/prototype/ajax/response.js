@@ -68,7 +68,7 @@ Ajax.Response = Class.create({
     var transport  = this.transport  = request.transport,
         readyState = this.readyState = transport.readyState;
 
-    if ((readyState > 2 && !Prototype.Browser.IE) || readyState == 4) {
+    if (readyState > 2) {
       this.status       = this.getStatus();
       this.statusText   = this.getStatusText();
       this.responseText = String.interpret(transport.responseText);
