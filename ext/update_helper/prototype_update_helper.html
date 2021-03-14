@@ -170,10 +170,6 @@
     },
     
     testHash: function() {
-      Hash.toQueryString({});
-      this.assertInfoNotified('Hash.toQueryString has been deprecated.\n' + 
-        'Use the instance method Hash#toQueryString or Object.toQueryString instead.');
-
      Hash.toJSON({});
       this.assertErrorNotified('Hash.toJSON has been removed.\n' + 
         'Use the instance method Hash#toJSON or Object.toJSON instead.');

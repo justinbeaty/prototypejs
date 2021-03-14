@@ -162,7 +162,6 @@ suite('Hash', function () {
     assert.equal("",                   $H({foo: {}, bar: {}}).toQueryString());
     assert.equal("stuff%5B%5D=%24&stuff%5B%5D=a&stuff%5B%5D=%3B", $H(Fixtures.Hash.multiple_special).toQueryString());
     assert.hashEqual(Fixtures.Hash.multiple_special, $H(Fixtures.Hash.multiple_special).toQueryString().toQueryParams());
-    assert.strictEqual(Object.toQueryString, Hash.toQueryString);
 
     // Serializing newlines and spaces is weird. See:
     // http://www.w3.org/TR/1999/REC-html401-19991224/interact/forms.html#h-17.13.4.1

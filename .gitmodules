@@ -12,6 +12,3 @@
 [submodule "vendor/sizzle/repository"]
 	path = vendor/sizzle/repository
 	url = git://github.com/jquery/sizzle.git
-[submodule "vendor/slick/repository"]
-	path = vendor/slick/repository
-	url = git://github.com/mootools/slick.git

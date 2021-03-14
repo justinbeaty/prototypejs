@@ -119,14 +119,7 @@ var prototypeUpdateHelper = new UpdateHelper([
     namespace: Element.Methods,
     message: 'Element#getElementsBySelector has been deprecated, please use Element#select instead.'
   },
-  
-  {
-    methodName: 'toQueryString',
-    namespace: Hash,
-    message: 'Hash.toQueryString has been deprecated.\n' + 
-      'Use the instance method Hash#toQueryString or Object.toQueryString instead.'
-  },
-  
+
   {
     methodName: 'toJSON',
     namespace: Hash,
