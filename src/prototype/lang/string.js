@@ -437,7 +437,7 @@ Object.extend(String.prototype, (function() {
    *  Parses a URI-like query string and returns an object composed of
    *  parameter/value pairs.
    *
-   *  This method is realy targeted at parsing query strings (hence the default
+   *  This method is really targeted at parsing query strings (hence the default
    *  value of`"&"` for the `separator` argument).
    *
    *  For this reason, it does _not_ consider anything that is either before a
@@ -472,27 +472,28 @@ Object.extend(String.prototype, (function() {
    *      // -> {id: '45', raw: undefined}
   **/
   function toQueryParams(separator) {
-    var match = this.strip().match(/([^?#]*)(#.*)?$/);
-    if (!match) return { };
+    let str = this.replace(/#.*$/, '');
 
-    return match[1].split(separator || '&').inject({ }, function(hash, pair) {
-      if ((pair = pair.split('='))[0]) {
-        var key = decodeURIComponent(pair.shift()),
-            value = pair.length > 1 ? pair.join('=') : pair[0];
+    if(separator && (separator !== '&'))
+      str = str.replaceAll(separator, '&');
 
-        if (value != undefined) {
-          value = value.gsub('+', ' ');
-          value = decodeURIComponent(value);
-        }
+    const searchParams = new URLSearchParams(str);
+    const result = {};
 
-        if (key in hash) {
-          if (!Object.isArray(hash[key])) hash[key] = [hash[key]];
-          hash[key].push(value);
-        }
-        else hash[key] = value;
-      }
-      return hash;
-    });
+    for (const [key, value] of searchParams) {
+
+      if(result.hasOwnProperty(key)) {
+
+        if(Array.isArray(result[key]))
+          result[key].push(value);
+        else
+          result[key] = [result[key], value];
+
+      } else
+        result[key] = value;
+    }
+
+    return result;
   }
 
   /**
