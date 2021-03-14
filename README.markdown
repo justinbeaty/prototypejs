@@ -1,5 +1,8 @@
-Prototype
-=========
+Prototype 2
+===========
+
+***This is a fork of the original Prototype framework, trimmed down to remove a lot
+of legacy code. Beware of legacy documentation still lingering around.***
 
 #### An object-oriented JavaScript framework ####
 
@@ -9,13 +12,7 @@ Ajax support, higher-order programming constructs, and easy DOM manipulation.
 
 ### Targeted platforms ###
 
-Prototype currently targets the following platforms:
-
-* Microsoft Internet Explorer for Windows, version 6.0 and higher
-* Mozilla Firefox 1.5 and higher
-* Apple Safari 2.0.4 and higher
-* Opera 9.25 and higher
-* Chrome 1.0 and higher
+Prototype 2.x targets modern, standard-compliant ES6 browsers.
 
 Using Prototype
 ---------------
@@ -48,14 +45,7 @@ From the root Prototype directory:
 Contributing to Prototype
 -------------------------
 
-Check out the Prototype source with 
-
-    $ git clone git://github.com/sstephenson/prototype.git
-    $ cd prototype
-    $ git submodule init
-    $ git submodule update vendor/sprockets vendor/pdoc vendor/unittest_js
-
-Find out how to contribute: <http://prototypejs.org/contribute>.
+Fork https://github.com/wiz78/prototype.git, write your patches, test them, create a PR... :)
 
 Documentation
 -------------
