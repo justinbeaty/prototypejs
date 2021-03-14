@@ -59,9 +59,7 @@
 function $A(iterable) {
   if (!iterable) return [];
   if (iterable.toArray) return iterable.toArray();
-  var length = iterable.length || 0, results = new Array(length);
-  while (length--) results[length] = iterable[length];
-  return results;
+  return Array.from(iterable);
 }
 
 /** section: Language, related to: Array
@@ -94,11 +92,6 @@ function $w(string) {
   string = string.strip();
   return string ? string.split(/\s+/) : [];
 }
-
-/** alias of: $A
- *  Array.from(iterable) -> Array
-**/
-Array.from = $A;
 
 /** section: Language
  * class Array
