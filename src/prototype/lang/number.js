@@ -99,8 +99,8 @@ Object.extend(Number.prototype, (function() {
    *      // -> "1101"
   **/
   function toPaddedString(length, radix) {
-    var string = this.toString(radix || 10);
-    return '0'.times(length - string.length) + string;
+    const string = this.toString(radix || 10);
+    return string.padStart(length, '0');
   }
 
   /**
