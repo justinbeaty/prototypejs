@@ -180,44 +180,6 @@
       Insertion.After('foo', 'text');
       this.assertInfoNotified('Insertion.After has been deprecated, please use Element#insert instead.');
     },
-    
-    testPosition: function() {
-      Position.prepare('foo');
-      this.assertInfoNotified('Position.prepare has been deprecated.');
-
-      Position.within('foo');
-      this.assertInfoNotified('Position.within has been deprecated.');
-
-      Position.withinIncludingScrolloffsets('foo');
-      this.assertInfoNotified('Position.withinIncludingScrolloffsets has been deprecated.');
-
-      Position.overlap('foo');
-      this.assertInfoNotified('Position.overlap has been deprecated.');
-
-      Position.cumulativeOffset('foo');
-      this.assertInfoNotified('Position.cumulativeOffset has been deprecated, please use Element#cumulativeOffset instead.');
-
-      Position.positionedOffset('foo');
-      this.assertInfoNotified('Position.positionedOffset has been deprecated, please use Element#positionedOffset instead.');
-
-      Position.absolutize('foo');
-      this.assertInfoNotified('Position.absolutize has been deprecated, please use Element#absolutize instead.');
-
-      Position.relativize('foo');
-      this.assertInfoNotified('Position.relativize has been deprecated, please use Element#relativize instead.');
-
-      Position.realOffset('foo');
-      this.assertInfoNotified('Position.realOffset has been deprecated, please use Element#cumulativeScrollOffset instead.');
-
-      Position.offsetParent('foo');
-      this.assertInfoNotified('Position.offsetParent has been deprecated, please use Element#getOffsetParent instead.');
-
-      Position.page('foo');
-      this.assertInfoNotified('Position.page has been deprecated, please use Element#viewportOffset instead.');
-
-      Position.clone('foo', 'bar');
-      this.assertInfoNotified('Position.clone has been deprecated, please use Element#clonePosition instead.');
-    },
 
     testEvent: function() {
       Event.unloadCache();
