@@ -125,21 +125,6 @@
         'Use either camelized style-property names or a regular CSS string instead (see online documentation).')
     },
 
-    testClassNames: function() {
-      new Element.ClassNames('foo');
-      this.assertInfoNotified('Element.ClassNames has been deprecated.')
-      
-      $('foo').classNames();
-      this.assertInfoNotified('Element#classNames has been deprecated.\n' +
-        'If you need to access CSS class names as an array, try: $w(element.classname).')
-
-      Element.getElementsByClassName('foo', 'className');
-      this.assertInfoNotified('Element#getElementsByClassName has been deprecated, please use Element#select instead.')
-      
-      document.getElementsByClassName('className');
-      this.assertInfoNotified('document.getElementsByClassName has been deprecated, please use $$ instead.')
-    },
-    
     testDomSelectors: function() {
       $('foo').immediateDescendants();
       this.assertInfoNotified('Element#immediateDescendants has been deprecated, please use Element#childElements instead.');

@@ -2218,20 +2218,6 @@
 
   GLOBAL.Element.Methods.Simulated.hasAttribute = hasAttribute;
 
-  /** deprecated
-   *  Element.classNames(@element) -> [String...]
-   *
-   *  Returns a new instance of [[Element.ClassNames]], an [[Enumerable]]
-   *  object used to read and write CSS class names of `element`.
-   *
-   *  **Deprecated**, please see [[Element.addClassName]],
-   *  [[Element.removeClassName]], and [[Element.hasClassName]]. If you want
-   *  an array of classnames, you can use `$w(element.className)`.
-  **/
-  function classNames(element) {
-    return new Element.ClassNames(element);
-  }
-
   var regExpCache = {};
   function getRegExpForClassName(className) {
     if (regExpCache[className]) return regExpCache[className];

@@ -67,12 +67,6 @@ var prototypeUpdateHelper = new UpdateHelper([
   },
 
   {
-    methodName: 'initialize',
-    namespace: Element.ClassNames.prototype,
-    message: 'Element.ClassNames has been deprecated.'
-  },
-  
-  {
     methodName: 'classNames',
     namespace: Element.Methods,
     message: 'Element#classNames has been deprecated.\n' +
