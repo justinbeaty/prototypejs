@@ -26,8 +26,6 @@ var Insertion = {
   }
 };
 
-var $continue = new Error('"throw $continue" is deprecated, use "return" instead');
-
 // This should be moved to script.aculo.us; notice the deprecated methods
 // further below, that map to the newer Element methods.
 var Position = {
