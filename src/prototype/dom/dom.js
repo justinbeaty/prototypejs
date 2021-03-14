@@ -2218,15 +2218,6 @@
 
   GLOBAL.Element.Methods.Simulated.hasAttribute = hasAttribute;
 
-  var regExpCache = {};
-  function getRegExpForClassName(className) {
-    if (regExpCache[className]) return regExpCache[className];
-
-    var re = new RegExp("(^|\\s+)" + className + "(\\s+|$)");
-    regExpCache[className] = re;
-    return re;
-  }
-
   /**
    *  Element.hasClassName(@element, className) -> Boolean
    *
@@ -2246,16 +2237,9 @@
    *      // -> false
   **/
   function hasClassName(element, className) {
-    if (!(element = $(element))) return;
+    element = $(element);
 
-    var elementClassName = element.className;
-
-    // We test these common cases first because we'd like to avoid creating
-    // the regular expression, if possible.
-    if (elementClassName.length === 0) return false;
-    if (elementClassName === className) return true;
-
-    return getRegExpForClassName(className).test(elementClassName);
+    return element && element.classList.contains(className);
   }
 
   /**
@@ -2280,10 +2264,10 @@
    *      // -> 'apple fruit food'
   **/
   function addClassName(element, className) {
-    if (!(element = $(element))) return;
+    element = $(element);
 
-    if (!hasClassName(element, className))
-      element.className += (element.className ? ' ' : '') + className;
+    if(element)
+      element.classList.add(className);
 
     return element;
   }
@@ -2309,10 +2293,10 @@
    *      // -> 'apple fruit'
   **/
   function removeClassName(element, className) {
-    if (!(element = $(element))) return;
+    element = $(element);
 
-    element.className = element.className.replace(
-     getRegExpForClassName(className), ' ').strip();
+    if(element)
+      element.classList.remove(className);
 
     return element;
   }
@@ -2346,13 +2330,12 @@
    *      // -> Element (keeps the "fruit" class name that was already there)
   **/
   function toggleClassName(element, className, bool) {
-    if (!(element = $(element))) return;
+    element = $(element);
 
-    if (Object.isUndefined(bool))
-      bool = !hasClassName(element, className);
+    if(element)
+      element.classList.toggle(className,bool);
 
-    var method = Element[bool ? 'addClassName' : 'removeClassName'];
-    return method(element, className);
+    return element;
   }
 
   var ATTRIBUTE_TRANSLATIONS = {};
