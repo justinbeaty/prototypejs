@@ -472,7 +472,7 @@ Object.extend(String.prototype, (function() {
    *      // -> {id: '45', raw: undefined}
   **/
   function toQueryParams(separator) {
-    let str = this.replace(/#.*$/, '');
+    let str = this.replace(/#.*$/, '').replace(/^[^?]*\?/, '');
 
     if(separator && (separator !== '&'))
       str = str.replaceAll(separator, '&');

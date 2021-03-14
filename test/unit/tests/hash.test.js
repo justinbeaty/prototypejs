@@ -19,8 +19,8 @@ Fixtures.Hash = {
   multiple_empty:   { color: [] },
   multiple_special: { 'stuff[]': $w('$ a ;') },
 
-  value_undefined:  { a:"b", c:undefined },
-  value_null:       { a:"b", c:null },
+  value_undefined:  { a:"b", c:'' },
+  value_null:       { a:"b", c:'' },
   value_zero:       { a:"b", c:0 }
 };
 
@@ -150,9 +150,9 @@ suite('Hash', function () {
     assert.equal('a%23=A',             $H({'a#': 'A'}).toQueryString());
     assert.equal('a=A%23',             $H(Fixtures.Hash.one).toQueryString());
     assert.equal('a=A&b=B&c=C&d=D%23', $H(Fixtures.Hash.many).toQueryString());
-    assert.equal("a=b&c",              $H(Fixtures.Hash.value_undefined).toQueryString());
-    assert.equal("a=b&c",              $H("a=b&c".toQueryParams()).toQueryString());
-    assert.equal("a=b+d&c",            $H("a=b+d&c".toQueryParams()).toQueryString());
+    assert.equal("a=b&c=",             $H(Fixtures.Hash.value_undefined).toQueryString());
+    assert.equal("a=b&c=",             $H("a=b&c".toQueryParams()).toQueryString());
+    assert.equal("a=b+d&c=",           $H("a=b+d&c".toQueryParams()).toQueryString());
     assert.equal("a=b&c=",             $H(Fixtures.Hash.value_null).toQueryString());
     assert.equal("a=b&c=0",            $H(Fixtures.Hash.value_zero).toQueryString());
     assert.equal("color=r&color=g&color=b", $H(Fixtures.Hash.multiple).toQueryString());

@@ -317,15 +317,15 @@ suite('String', function () {
 
   test('#toQueryParams', function () {
     // only the query part
-    var result = {a:undefined, b:'c'};
+    var result = {a:'', b:'c'};
     assert.hashEqual({}, ''.toQueryParams(), 'empty query');
     assert.hashEqual({}, 'foo?'.toQueryParams(), 'empty query with URL');
     assert.hashEqual(result, 'foo?a&b=c'.toQueryParams(), 'query with URL');
     assert.hashEqual(result, 'foo?a&b=c#fragment'.toQueryParams(), 'query with URL and fragment');
     assert.hashEqual(result, 'a;b=c'.toQueryParams(';'), 'custom delimiter');
 
-    assert.hashEqual({a:undefined}, 'a'.toQueryParams(), 'key without value');
-    assert.hashEqual({a:'b'},  'a=b&=c'.toQueryParams(), 'empty key');
+    assert.hashEqual({a:''}, 'a'.toQueryParams(), 'key without value');
+    assert.hashEqual({a:'b', '':'c'}, 'a=b&=c'.toQueryParams(), 'empty key');
     assert.hashEqual({a:'b', c:''}, 'a=b&c='.toQueryParams(), 'empty value');
     assert.hashEqual({a:'  '}, 'a=++'.toQueryParams(), 'value of spaces');
 
