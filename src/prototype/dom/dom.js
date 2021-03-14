@@ -2493,7 +2493,6 @@
     identify:        identify,
     readAttribute:   readAttribute,
     writeAttribute:  writeAttribute,
-    classNames:      classNames,
     hasClassName:    hasClassName,
     addClassName:    addClassName,
     removeClassName: removeClassName,

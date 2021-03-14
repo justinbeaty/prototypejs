@@ -1261,40 +1261,40 @@ suite('DOM', function () {
   test('#addClassName', function () {
     $('class_names').addClassName('added_className');
 
-    assert.enumEqual(['added_className'], $('class_names').classNames());
+    assert.enumEqual(['added_className'], $('class_names').classList);
 
     // verify that className cannot be added twice.
     $('class_names').addClassName('added_className');
-    assert.enumEqual(['added_className'], $('class_names').classNames(), '2');
+    assert.enumEqual(['added_className'], $('class_names').classList, '2');
 
     $('class_names').addClassName('another_added_className');
-    assert.enumEqual(['added_className', 'another_added_className'], $('class_names').classNames(), '3');
+    assert.enumEqual(['added_className', 'another_added_className'], $('class_names').classList, '3');
 
   });
 
   test('#removeClassName', function () {
     $('class_names').removeClassName('added_className');
-    assert.enumEqual(['another_added_className'], $('class_names').classNames());
+    assert.enumEqual(['another_added_className'], $('class_names').classList);
 
     $('class_names').removeClassName('added_className'); // verify that removing a non existent className is safe.
-    assert.enumEqual(['another_added_className'], $('class_names').classNames());
+    assert.enumEqual(['another_added_className'], $('class_names').classList);
 
     $('class_names').removeClassName('another_added_className');
-    assert.enumEqual([], $('class_names').classNames());
+    assert.enumEqual([], $('class_names').classList);
   });
 
   test('#toggleClassName', function () {
     $('class_names').toggleClassName('toggled_className');
-    assert.enumEqual(['toggled_className'], $('class_names').classNames());
+    assert.enumEqual(['toggled_className'], $('class_names').classList);
 
     $('class_names').toggleClassName('toggled_className');
-    assert.enumEqual([], $('class_names').classNames());
+    assert.enumEqual([], $('class_names').classList);
 
     $('class_names_ul').toggleClassName('toggled_className');
-    assert.enumEqual(['A', 'B', 'toggled_className'], $('class_names_ul').classNames());
+    assert.enumEqual(['A', 'B', 'toggled_className'], $('class_names_ul').classList);
 
     $('class_names_ul').toggleClassName('toggled_className');
-    assert.enumEqual(['A', 'B'], $('class_names_ul').classNames());
+    assert.enumEqual(['A', 'B'], $('class_names_ul').classList);
   });
 
   test('#scrollTo', function () {

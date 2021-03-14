@@ -67,13 +67,6 @@ var prototypeUpdateHelper = new UpdateHelper([
   },
 
   {
-    methodName: 'classNames',
-    namespace: Element.Methods,
-    message: 'Element#classNames has been deprecated.\n' +
-      'If you need to access CSS class names as an array, try: $w(element.classname).'
-  },
-  
-  {
     methodName: 'setStyle',
     namespace: Element.Methods,
     message: 'Use of uncamelized style-property names is no longer supported.\n' + 

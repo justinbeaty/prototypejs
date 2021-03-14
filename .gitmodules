@@ -7,8 +7,3 @@
 [submodule "vendor/sprockets"]
   path = vendor/sprockets
   url = git://github.com/sstephenson/sprockets.git
-
-
-[submodule "vendor/sizzle/repository"]
-	path = vendor/sizzle/repository
-	url = git://github.com/jquery/sizzle.git

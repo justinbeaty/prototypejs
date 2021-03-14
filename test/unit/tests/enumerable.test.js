@@ -239,7 +239,7 @@ suite('Enumerable', function () {
 
     assert.enumEqual(
       $('grepHeader', 'grepCell'),
-      $('grepTable', 'grepTBody', 'grepRow', 'grepHeader', 'grepCell').grep(new Selector('.cell'))
+      $('grepTable', 'grepTBody', 'grepRow', 'grepHeader', 'grepCell').grep( { match: e => e.matches('.cell') } )
     );
 
     // troublesome characters

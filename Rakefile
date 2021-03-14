@@ -17,8 +17,6 @@ module PrototypeHelper
   TMP_DIR       = File.join(TEST_UNIT_DIR, 'tmp')
   VERSION       = YAML.load(IO.read(File.join(SRC_DIR, 'constants.yml')))['PROTOTYPE_VERSION']
 
-  DEFAULT_SELECTOR_ENGINE = 'sizzle'
-
   host = RbConfig::CONFIG['host']
   IS_WINDOWS = host.include?('mswin') || host.include?('mingw32')
 
@@ -55,10 +53,6 @@ module PrototypeHelper
 
     require_sprockets
     load_path = [SRC_DIR]
-
-    if selector_path = get_selector_engine(options[:selector_engine])
-      load_path << selector_path
-    end
 
     secretary = Sprockets::Secretary.new(
       :root           => File.join(ROOT_DIR, options[:path]),
@@ -182,21 +176,6 @@ EOF
     require_submodule('CajaBuilder', 'caja_builder')
   end
 
-  def self.get_selector_engine(name)
-    return if !name
-    # If the submodule exists, we should use it.
-    submodule_path = File.join(ROOT_DIR, "vendor", name)
-    return submodule_path if File.exist?(File.join(submodule_path, "repository", ".git"))
-    return submodule_path if name === "legacy_selector"
-
-    # If it doesn't exist, we should fetch it.
-    get_submodule('the required selector engine', "#{name}/repository")
-    unless File.exist?(submodule_path)
-      puts "The selector engine you required isn't available at vendor/#{name}.\n\n"
-      exit
-    end
-  end
-
   def self.get_submodule(name, path)
     require_git
     puts "\nYou seem to be missing #{name}. Obtaining it via git...\n\n"
@@ -244,8 +223,7 @@ desc "Builds the distribution."
 task :dist do
   PrototypeHelper.sprocketize(
     :path => 'src',
-    :source => 'prototype.js',
-    :selector_engine => ENV['SELECTOR_ENGINE'] || PrototypeHelper::DEFAULT_SELECTOR_ENGINE
+    :source => 'prototype.js'
   )
 end
 

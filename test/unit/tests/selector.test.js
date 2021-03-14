@@ -76,7 +76,7 @@ suite('Selector', function () {
 
   test('tag + attr equality (a[href="#"])', function () {
     assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href="#"]'));
-    assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href=#]'));
+    assert.enumEqual($('link_1', 'link_2', 'link_3'), $$('#fixtures a[href=\'#\']'));
   });
 
   test('tag + attr whitespace-tokenized (a[class~="internal"])', function () {
@@ -100,8 +100,7 @@ suite('Selector', function () {
   });
 
   test('attr negation a[href!="#"]', function () {
-    assert.enumEqual($('item_2', 'item_3'), $$('#list li[id!="item_1"]'));
-    // assert.enumEqual([], $$('a[href!="#"]'));
+    assert.enumEqual($('item_2', 'item_3'), $$('#list li:not([id="item_1"])'));
   });
 
   test('attr (value with brackets) (input[name="brackets[5][]"])', function () {
@@ -115,7 +114,7 @@ suite('Selector', function () {
     );
     assert.enumEqual(
       [$('chk_2')],
-      $$('#troubleForm2 input[name="brackets[5][]"][value=2]')
+      $$('#troubleForm2 input[name="brackets[5][]"][value="2"]')
     );
     try {
       $$('#troubleForm2 input[name=brackets[5][]]');
@@ -132,7 +131,7 @@ suite('Selector', function () {
   test('a (multiple) ([class~=external][href="#"])', function () {
     assert.enumEqual([$('link_3')], $$('a[class~=external][href="#"]'),
      'a[class~=external][href="#"]');
-    assert.enumEqual([], $$('a[class~=external][href!="#"]'),
+    assert.enumEqual([], $$('a[class~=external]:not([href="#"])'),
      'a[class~=external][href!="#"]');
   });
 
@@ -213,7 +212,7 @@ suite('Selector', function () {
     assert.enumEqual($('level2_1', 'level3_1'), $$('#level1 *[id$="_1"]'));
     assert.enumEqual($('level2_1', 'level3_1'), $$('#level1 *[id$=_1]'));
     assert.enumEqual($('level2_1', 'level3_2', 'level2_2', 'level2_3'), $$('#level1 *[id*="2"]'));
-    assert.enumEqual($('level2_1', 'level3_2', 'level2_2', 'level2_3'), $$('#level1 *[id*=2]'));
+    assert.enumEqual($('level2_1', 'level3_2', 'level2_2', 'level2_3'), $$('#level1 *[id*=\'2\']'));
   });
 
   test('selectors with duplicates', function () {

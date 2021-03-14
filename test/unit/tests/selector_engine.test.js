@@ -2,10 +2,6 @@
 suite('Selector engine', function () {
   this.name = 'selector_engine';
 
-  test('.engine', function () {
-    assert(Prototype.Selector.engine);
-  });
-
   test('.select', function () {
     var elements = Prototype.Selector.select('.test_class');
 
