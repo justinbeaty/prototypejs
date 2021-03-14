@@ -163,20 +163,6 @@
       this.assertErrorNotified('Passing an arbitrary number of elements to Field.present is no longer supported.\n' +
         'Use [id_1, id_2, ...].each(Form.Element.present) or $(id_1, id_2, ...).invoke("present") instead.');
     },
-    
-    testInsertion: function() {
-      Insertion.Before('foo', 'text');
-      this.assertInfoNotified('Insertion.Before has been deprecated, please use Element#insert instead.');
-
-      Insertion.Top('foo', 'text');
-      this.assertInfoNotified('Insertion.Top has been deprecated, please use Element#insert instead.');
-
-      Insertion.Bottom('foo', 'text');
-      this.assertInfoNotified('Insertion.Bottom has been deprecated, please use Element#insert instead.');
-
-      Insertion.After('foo', 'text');
-      this.assertInfoNotified('Insertion.After has been deprecated, please use Element#insert instead.');
-    },
 
     testEvent: function() {
       Event.unloadCache();

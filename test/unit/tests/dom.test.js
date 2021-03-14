@@ -295,18 +295,6 @@ suite('DOM', function () {
 
   });
 
-
-  test('Insertion (backwards-compatibility)', function () {
-    new Insertion.Before('element-insertions-main', 'some backward-compatibility testing before');
-    assert(getInnerHTML('element-insertions-container').include('some backward-compatibility testing before'));
-    new Insertion.After('element-insertions-main', 'some backward-compatibility testing after');
-    assert(getInnerHTML('element-insertions-container').include('some backward-compatibility testing after'));
-    new Insertion.Top('element-insertions-main', 'some backward-compatibility testing top');
-    assert(getInnerHTML('element-insertions-main').startsWith('some backward-compatibility testing top'));
-    new Insertion.Bottom('element-insertions-main', 'some backward-compatibility testing bottom');
-    assert(getInnerHTML('element-insertions-main').endsWith('some backward-compatibility testing bottom'));
-  });
-
   test('#wrap', function () {
     var element = $('wrap'), parent = document.createElement('div');
     element.wrap();

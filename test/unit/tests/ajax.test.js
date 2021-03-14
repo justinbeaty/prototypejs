@@ -160,7 +160,7 @@ suite("Ajax", function () {
       $('content').update();
       new Ajax.Updater('content', '/fixtures/content.html', {
         method: 'get',
-        insertion: Insertion.Top
+        insertion: 'top'
       });
       assertContent('content', '');
 

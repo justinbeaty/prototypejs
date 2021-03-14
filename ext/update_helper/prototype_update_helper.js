@@ -71,30 +71,6 @@ var prototypeUpdateHelper = new UpdateHelper([
     namespace: Element.Methods,
     message: 'Element#childOf has been deprecated, please use Element#descendantOf instead.'
   },
-  
-  {
-    methodName: 'Before',
-    namespace: Insertion,
-    message: 'Insertion.Before has been deprecated, please use Element#insert instead.'
-  },
-  
-  {
-    methodName: 'Top',
-    namespace: Insertion,
-    message: 'Insertion.Top has been deprecated, please use Element#insert instead.'
-  },
-  
-  {
-    methodName: 'Bottom',
-    namespace: Insertion,
-    message: 'Insertion.Bottom has been deprecated, please use Element#insert instead.'
-  },
-  
-  {
-    methodName: 'After',
-    namespace: Insertion,
-    message: 'Insertion.After has been deprecated, please use Element#insert instead.'
-  },
 
   {
     methodName: 'initialize',
