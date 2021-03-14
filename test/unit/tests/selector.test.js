@@ -136,20 +136,6 @@ suite('Selector', function () {
      'a[class~=external][href!="#"]');
   });
 
-  test('.matchElements', function () {
-    assert.elementsMatch(Selector.matchElements($('list').descendants(), 'li'), '#item_1', '#item_2', '#item_3');
-    assert.elementsMatch(Selector.matchElements($('fixtures').descendants(), 'a.internal'), '#link_1', '#link_2');
-    assert.enumEqual([], Selector.matchElements($('fixtures').descendants(), 'p.last'));
-    assert.elementsMatch(Selector.matchElements($('fixtures').descendants(), '.inexistant, a.internal'), '#link_1', '#link_2');
-  });
-
-  test('.findElement', function () {
-    assert.elementMatches(Selector.findElement($('list').descendants(), 'li'), 'li#item_1.first');
-    assert.elementMatches(Selector.findElement($('list').descendants(), 'li', 1), 'li#item_2');
-    assert.elementMatches(Selector.findElement($('list').descendants(), 'li#item_3'), 'li');
-    assert.equal(undefined, Selector.findElement($('list').descendants(), 'em'));
-  });
-
   test('Element#match', function () {
     var span = $('dupL1');
 
@@ -340,18 +326,6 @@ suite('Selector', function () {
     assert(typeof results[2].show == 'function');
   });
 
-  test('copied nodes get included', function () {
-    assert.elementsMatch(
-      Selector.matchElements($('counted_container').descendants(), 'div'),
-      'div.is_counted'
-    );
-    $('counted_container').innerHTML += $('counted_container').innerHTML;
-    assert.elementsMatch(
-      Selector.matchElements($('counted_container').descendants(), 'div'), 'div.is_counted',
-      'div.is_counted'
-    );
-  });
-
   test('#select (on detached nodes)', function () {
     var wrapper = new Element("div");
     wrapper.update("<table><tr><td id='myTD'></td></tr></table>");
@@ -388,18 +362,4 @@ suite('Selector', function () {
     assert.equal(2, $(el).select('ul li').length);
     document.body.removeChild(el);
   });
-
-  test('.findElement (with index when elements are not in document order)', function () {
-    var ancestors = $("target_1").ancestors();
-    assert.equal(
-      $("container_2"),
-      Selector.findElement(ancestors, "[container], .container", 0)
-    );
-    assert.equal(
-      $("container_1"),
-      Selector.findElement(ancestors, "[container], .container", 1)
-    );
-  });
-
-
 });
