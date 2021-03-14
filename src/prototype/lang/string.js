@@ -333,7 +333,7 @@ Object.extend(String.prototype, (function() {
       if (attributes !== '') {
         // If the script has a `type` attribute, make sure it has a
         // JavaScript MIME-type. If not, ignore it.
-        attributes = attributes.strip();
+        attributes = attributes.trim();
         var hasTypeAttribute = (matchTypeAttribute).test(attributes);
         var hasMimeType = (matchMimeType).test(attributes);
         if (hasTypeAttribute && !hasMimeType) return;

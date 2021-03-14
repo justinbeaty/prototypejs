@@ -2353,7 +2353,7 @@
     _getEv = function(element, attribute) {
       const value = element.getAttribute( attribute );
       if (!value) return null;
-      return value.strip();
+      return value.trim();
     };
   }
 

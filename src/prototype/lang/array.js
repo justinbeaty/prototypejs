@@ -89,7 +89,7 @@ function $A(iterable) {
 
 function $w(string) {
   if (!Object.isString(string)) return [];
-  string = string.strip();
+  string = string.trim();
   return string ? string.split(/\s+/) : [];
 }
 
