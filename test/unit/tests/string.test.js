@@ -431,13 +431,11 @@ suite('String', function () {
   test('#times', function () {
     assert.equal('', ''.times(0));
     assert.equal('', ''.times(5));
-    assert.equal('', 'a'.times(-1));
     assert.equal('', 'a'.times(0));
     assert.equal('a', 'a'.times(1));
     assert.equal('aa', 'a'.times(2));
     assert.equal('aaaaa', 'a'.times(5));
     assert.equal('foofoofoofoofoo', 'foo'.times(5));
-    assert.equal('', 'foo'.times(-5));
   });
 
   test('#isJSON', function () {
