@@ -94,9 +94,9 @@ var Hash = Class.create(Enumerable, (function() {
 
   // Our _internal_ each
   function _each(iterator, context) {
-    var i = 0;
-    for (var key in this._object) {
-      var value = this._object[key], pair = [key, value];
+    let i = 0;
+    for ( let key in this._object) {
+      const value = this._object[ key ], pair = [ key, value ];
       pair.key = key;
       pair.value = value;
       iterator.call(context, pair, i);
@@ -139,8 +139,7 @@ var Hash = Class.create(Enumerable, (function() {
    *      // -> 'apple'
   **/
   function get(key) {
-    // simulating poorly supported hasOwnProperty
-    if (this._object[key] !== Object.prototype[key])
+    if (this._object.hasOwnProperty(key))
       return this._object[key];
   }
 
@@ -161,7 +160,7 @@ var Hash = Class.create(Enumerable, (function() {
    *      // -> ["b", "c"] ("a" is no longer in the hash)
   **/
   function unset(key) {
-    var value = this._object[key];
+    const value = this._object[ key ];
     delete this._object[key];
     return value;
   }
@@ -232,9 +231,7 @@ var Hash = Class.create(Enumerable, (function() {
    *  Returns `false` if there is no such key.
   **/
   function index(value) {
-    var match = this.detect(function(pair) {
-      return pair.value === value;
-    });
+    const match = this.detect( pair => pair.value === value );
     return match && match.key;
   }
 
@@ -287,22 +284,6 @@ var Hash = Class.create(Enumerable, (function() {
     });
   }
 
-  // Private. No PDoc necessary.
-  function toQueryPair(key, value) {
-    if (Object.isUndefined(value)) return key;
-    
-    value = String.interpret(value);
-
-    // Normalize newlines as \r\n because the HTML spec says newlines should
-    // be encoded as CRLFs.
-    value = value.gsub(/(\r)?\n/, '\r\n');
-    value = encodeURIComponent(value);
-    // Likewise, according to the spec, spaces should be '+' rather than
-    // '%20'.
-    value = value.gsub(/%20/, '+');
-    return key + '=' + value;
-  }
-
   /** related to: String#toQueryParams
    *  Hash#toQueryString() -> String
    *
@@ -343,26 +324,28 @@ var Hash = Class.create(Enumerable, (function() {
    *      // -> ""
   **/
   function toQueryString() {
-    return this.inject([], function(results, pair) {
-      var key = encodeURIComponent(pair.key), values = pair.value;
-      
+    const params = new URLSearchParams();
+
+    this._each( function(pair) {
+      const key = pair.key, values = pair.value;
+
       if (values && typeof values == 'object') {
         if (Object.isArray(values)) {
-          // We used to use `Array#map` here to get the query pair for each
-          // item in the array, but that caused test regressions once we
-          // added the sparse array behavior for array iterator methods.
-          // Changed to an ordinary `for` loop so that we can handle
-          // `undefined` values ourselves rather than have them skipped.
-          var queryValues = [];
-          for (var i = 0, len = values.length, value; i < len; i++) {
-            value = values[i];
-            queryValues.push(toQueryPair(key, value));            
-          }
-          return results.concat(queryValues);
+          values.forEach( i => params.append(key, _toQueryValue(i)));
         }
-      } else results.push(toQueryPair(key, values));
-      return results;
-    }).join('&');
+      } else
+        params.append(key, _toQueryValue(values));
+    });
+
+    return params.toString();
+  }
+
+  function _toQueryValue( value )
+  {
+    if((value === null) || (typeof value === 'undefined'))
+      value = '';
+
+    return value;
   }
 
   /** related to: Object.inspect

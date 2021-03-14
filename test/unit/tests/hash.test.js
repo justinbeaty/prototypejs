@@ -156,7 +156,7 @@ suite('Hash', function () {
     assert.equal("a=b&c=",             $H(Fixtures.Hash.value_null).toQueryString());
     assert.equal("a=b&c=0",            $H(Fixtures.Hash.value_zero).toQueryString());
     assert.equal("color=r&color=g&color=b", $H(Fixtures.Hash.multiple).toQueryString());
-    assert.equal("color=r&color=&color=g&color&color=0", $H(Fixtures.Hash.multiple_nil).toQueryString());
+    assert.equal("color=r&color=&color=g&color=&color=0", $H(Fixtures.Hash.multiple_nil).toQueryString());
     assert.equal("color=&color",       $H(Fixtures.Hash.multiple_all_nil).toQueryString());
     assert.equal("",                   $H(Fixtures.Hash.multiple_empty).toQueryString());
     assert.equal("",                   $H({foo: {}, bar: {}}).toQueryString());
