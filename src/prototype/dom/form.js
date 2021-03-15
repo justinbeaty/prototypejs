@@ -106,7 +106,8 @@ var Form = {
     // default true, as that's the new preferred approach.
     if (typeof options != 'object') options = { hash: !!options };
     else if (Object.isUndefined(options.hash)) options.hash = true;
-    var key, value, submitted = false, submit = options.submit, accumulator, initial;
+    const submit = options.submit;
+    let submitted = false, accumulator, initial;
 
     if (options.hash) {
       initial = {};
@@ -118,34 +119,30 @@ var Form = {
         return result;
       };
     } else {
-      initial = '';
+      initial = new URLSearchParams();
       accumulator = function(result, key, values) {
         if (!Object.isArray(values)) {values = [values];}
         if (!values.length) {return result;}
-        // According to the spec, spaces should be '+' rather than '%20'.
-        var encodedKey = encodeURIComponent(key).gsub(/%20/, '+');
-        return result + (result ? "&" : "") + values.map(function (value) {
-          // Normalize newlines as \r\n because the HTML spec says newlines should
-          // be encoded as CRLFs.
-          value = value.gsub(/(\r)?\n/, '\r\n');
-          value = encodeURIComponent(value);
-          // According to the spec, spaces should be '+' rather than '%20'.
-          value = value.gsub(/%20/, '+');
-          return encodedKey + "=" + value;
-        }).join("&");
+
+        values.forEach(value => result.append(key, value));
+
+        return result;
       };
     }
 
-    return elements.inject(initial, function(result, element) {
+    const result = elements.inject(initial, function(result, element) {
       if (!element.disabled && element.name) {
-        key = element.name; value = $(element).getValue();
-        if (value != null && element.type != 'file' && (element.type != 'submit' || (!submitted &&
+        const key = element.name;
+        const value = $(element).getValue();
+        if (value != null && element.type !== 'file' && (element.type !== 'submit' || (!submitted &&
             submit !== false && (!submit || key == submit) && (submitted = true)))) {
           result = accumulator(result, key, value);
         }
       }
       return result;
     });
+
+    return options.hash ? result : result.toString();
   }
 };
 

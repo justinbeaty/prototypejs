@@ -157,7 +157,7 @@ suite('Hash', function () {
     assert.equal("a=b&c=0",            $H(Fixtures.Hash.value_zero).toQueryString());
     assert.equal("color=r&color=g&color=b", $H(Fixtures.Hash.multiple).toQueryString());
     assert.equal("color=r&color=&color=g&color=&color=0", $H(Fixtures.Hash.multiple_nil).toQueryString());
-    assert.equal("color=&color",       $H(Fixtures.Hash.multiple_all_nil).toQueryString());
+    assert.equal("color=&color=",      $H(Fixtures.Hash.multiple_all_nil).toQueryString());
     assert.equal("",                   $H(Fixtures.Hash.multiple_empty).toQueryString());
     assert.equal("",                   $H({foo: {}, bar: {}}).toQueryString());
     assert.equal("stuff%5B%5D=%24&stuff%5B%5D=a&stuff%5B%5D=%3B", $H(Fixtures.Hash.multiple_special).toQueryString());
@@ -168,8 +168,8 @@ suite('Hash', function () {
     var complex = "an arbitrary line\n\'something in single quotes followed by a newline\'\r\n" +
      "and more text eventually";
     var queryString = $H({ val: complex }).toQueryString();
-    var expected = "val=an+arbitrary+line%0D%0A'something+in+single+quotes+followed+by+a+" +
-     "newline'%0D%0Aand+more+text+eventually";
+    var expected = "val=an+arbitrary+line%0A%27something+in+single+quotes+followed+by+a+" +
+     "newline%27%0D%0Aand+more+text+eventually";
     assert.equal(expected, queryString, "newlines and spaces should be properly encoded");
   });
 
