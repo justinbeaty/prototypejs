@@ -390,7 +390,7 @@
   }
 
   function isCustomEvent(eventName) {
-    return eventName.include(':');
+    return eventName.includes(':');
   }
 
   Event._isCustomEvent = isCustomEvent;
@@ -486,8 +486,6 @@
    *  [[Event.observe]] smooths out a variety of differences between browsers
    *  and provides some handy additional features as well. Key features in brief:
    *  * Several handlers can be registered for the same event on the same element.
-   *  * Prototype figures out whether to use `addEventListener` (W3C standard) or
-   *    `attachEvent` (MSIE); you don't have to worry about it.
    *  * The handler is passed an _extended_ [[Event]] object (even on MSIE).
    *  * The handler's context (`this` value) is set to the extended element
    *    being observed (even if the event actually occurred on a descendent
@@ -632,32 +630,10 @@
     if (entry === null) return element;
 
     var responder = entry.responder;
-    if (isCustomEvent(eventName))
-      observeCustomEvent(element, eventName, responder);
-    else
-      observeStandardEvent(element, eventName, responder);
+    var actualEventName = isCustomEvent(eventName) ? 'dataavailable' : getDOMEventName(eventName);
+    element.addEventListener(actualEventName, responder, false);
 
     return element;
-  }
-
-  function observeStandardEvent(element, eventName, responder) {
-    var actualEventName = getDOMEventName(eventName);
-    if (element.addEventListener) {
-      element.addEventListener(actualEventName, responder, false);
-    } else {
-      element.attachEvent('on' + actualEventName, responder);
-    }
-  }
-
-  function observeCustomEvent(element, eventName, responder) {
-    if (element.addEventListener) {
-      element.addEventListener('dataavailable', responder, false);
-    } else {
-      // We observe two IE-proprietarty events: one for custom events that
-      // bubble and one for custom events that do not bubble.
-      element.attachEvent('ondataavailable', responder);
-      element.attachEvent('onlosecapture',   responder);
-    }
   }
 
   /**
@@ -744,25 +720,6 @@
     return element;
   }
 
-  function stopObservingStandardEvent(element, eventName, responder) {
-    var actualEventName = getDOMEventName(eventName);
-    if (element.removeEventListener) {
-      element.removeEventListener(actualEventName, responder, false);
-    } else {
-      element.detachEvent('on' + actualEventName, responder);
-    }
-  }
-
-  function stopObservingCustomEvent(element, eventName, responder) {
-    if (element.removeEventListener) {
-      element.removeEventListener('dataavailable', responder, false);
-    } else {
-      element.detachEvent('ondataavailable', responder);
-      element.detachEvent('onlosecapture',   responder);
-    }
-  }
-
-
   // The `stopObservingElement` and `stopObservingEventName` functions are
   // for bulk removal of event listeners. We use them rather than recurse
   // back into `stopObserving` to avoid touching the registry more often than
@@ -816,10 +773,8 @@
 
 
   function removeEvent(element, eventName, handler) {
-    if (isCustomEvent(eventName))
-      stopObservingCustomEvent(element, eventName, handler);
-    else
-      stopObservingStandardEvent(element, eventName, handler);
+    const actualEventName = isCustomEvent(eventName) ? 'dataavailable' : getDOMEventName(eventName);
+    element.removeEventListener(actualEventName, handler, false);
   }
 
 
