@@ -1,5 +1,4 @@
 (function(GLOBAL) {
-
   let UNDEFINED;
   const SLICE = Array.prototype.slice;
 
@@ -7,6 +6,31 @@
   // this DIV for capability checks (where possible) and for normalizing
   // HTML content.
   const DIV = document.createElement( 'div' );
+
+  const INSERTION_TRANSLATIONS = {
+    before: function(element, node) {
+      element.before(node);
+    },
+    top: function(element, node) {
+      element.insertBefore(node, element.firstChild);
+    },
+    bottom: function(element, node) {
+      element.appendChild(node);
+    },
+    after: function(element, node) {
+      element.after(node);
+    },
+
+    tags: {
+      TABLE:  ['<table>',                '</table>',                   1],
+      TBODY:  ['<table><tbody>',         '</tbody></table>',           2],
+      TR:     ['<table><tbody><tr>',     '</tr></tbody></table>',      3],
+      TD:     ['<table><tbody><tr><td>', '</td></tr></tbody></table>', 4],
+      SELECT: ['<select>',               '</select>',                  1]
+    }
+  };
+
+  const ATTRIBUTE_TRANSLATIONS = {};
 
   /** section: DOM
    * class Element
@@ -72,7 +96,9 @@
   **/
   function $(element) {
     if (arguments.length > 1) {
-      for (var i = 0, elements = [], length = arguments.length; i < length; i++)
+      const elements = [];
+      const length = arguments.length;
+      for (let i = 0; i < length; i++)
         elements.push($(arguments[i]));
       return elements;
     }
@@ -83,7 +109,6 @@
   }
 
   GLOBAL.$ = $;
-
 
   // The cache for all our created elements.
   let ELEMENT_CACHE = {};
@@ -96,8 +121,7 @@
   //       (troublesome in IE9).
   function shouldUseCreationCache(tagName, attributes) {
     if (tagName === 'select') return false;
-    if ('type' in attributes) return false;
-    return true;
+    return !( 'type' in attributes );
   }
 
   /**
@@ -580,16 +604,13 @@
     // Purge the element's existing contents of all storage keys and
     // event listeners, since said content will be replaced no matter
     // what.
-    var descendants = element.getElementsByTagName('*'),
-     i = descendants.length;
-    while (i--) purgeElement(descendants[i]);
+    element.querySelectorAll( '*' ).forEach(purgeElement);
 
     if (content && content.toElement)
       content = content.toElement();
 
     if (Object.isElement(content))
       return element.update().insert(content);
-
 
     content = Object.toHTML(content);
     const tagName = element.tagName.toUpperCase();
@@ -600,8 +621,8 @@
           element.removeChild(element.firstChild);
 
         const nodes = getContentFromAnonymousElement( tagName, content.stripScripts() );
-        for (var i = 0, node; node = nodes[i]; i++)
-          element.appendChild(node);
+
+        nodes.forEach(node => element.appendChild(node));
 
       } else {
         element.innerHTML = content.stripScripts();
@@ -697,32 +718,9 @@
       content = range.createContextualFragment(content.stripScripts());
     }
 
-    element.parentNode.replaceChild(content, element);
+    element.replaceWith(content);
     return element;
   }
-
-  var INSERTION_TRANSLATIONS = {
-    before: function(element, node) {
-      element.parentNode.insertBefore(node, element);
-    },
-    top: function(element, node) {
-      element.insertBefore(node, element.firstChild);
-    },
-    bottom: function(element, node) {
-      element.appendChild(node);
-    },
-    after: function(element, node) {
-      element.parentNode.insertBefore(node, element.nextSibling);
-    },
-
-    tags: {
-      TABLE:  ['<table>',                '</table>',                   1],
-      TBODY:  ['<table><tbody>',         '</tbody></table>',           2],
-      TR:     ['<table><tbody><tr>',     '</tr></tbody></table>',      3],
-      TD:     ['<table><tbody><tr><td>', '</td></tr></tbody></table>', 4],
-      SELECT: ['<select>',               '</select>',                  1]
-    }
-  };
 
   const tags = INSERTION_TRANSLATIONS.tags;
 
@@ -737,9 +735,8 @@
 
     if (Object.isString(content) || Object.isNumber(content)) return true;
     if (Object.isElement(content)) return true;
-    if (content.toElement || content.toHTML) return true;
 
-    return false;
+    return !!( content.toElement || content.toHTML );
   }
 
   // This private method does the bulk of the work for Element#insert. The
@@ -763,9 +760,7 @@
 
     if (position === 'top' || position === 'after') childNodes.reverse();
 
-    let i = 0, node;
-    for (; node = childNodes[i]; i++)
-      method(element, node);
+    childNodes.forEach(node => method(element, node));
 
     content.evalScripts.bind(content).defer();
   }
@@ -1962,14 +1957,9 @@
   function adjacent(element) {
     element = $(element);
     const expressions = SLICE.call( arguments, 1 ).join( ', ' );
-    const siblings = Element.siblings( element ), results = [];
-    let i = 0, sibling;
-    for (; sibling = siblings[i]; i++) {
-      if (Prototype.Selector.match(sibling, expressions))
-        results.push(sibling);
-    }
+    const siblings = Element.siblings( element );
 
-    return results;
+    return siblings.filter(sibling => sibling.matches(expressions));
   }
 
   /**
@@ -2309,8 +2299,6 @@
     return element;
   }
 
-  var ATTRIBUTE_TRANSLATIONS = {};
-
   // Test attributes.
   const classProp = 'class';
   let forProp = 'for';
@@ -2402,16 +2390,16 @@
 
   ATTRIBUTE_TRANSLATIONS.has = { names: {} };
 
-  Object.extend(ATTRIBUTE_TRANSLATIONS.write.names,
-   ATTRIBUTE_TRANSLATIONS.read.names);
+  Object.extend(ATTRIBUTE_TRANSLATIONS.write.names, ATTRIBUTE_TRANSLATIONS.read.names);
 
   const CAMEL_CASED_ATTRIBUTE_NAMES = $w( 'colSpan rowSpan vAlign dateTime ' +
       'accessKey tabIndex encType maxLength readOnly longDesc frameBorder' );
 
-  for (var i = 0, attr; attr = CAMEL_CASED_ATTRIBUTE_NAMES[i]; i++) {
-    ATTRIBUTE_TRANSLATIONS.write.names[attr.toLowerCase()] = attr;
-    ATTRIBUTE_TRANSLATIONS.has.names[attr.toLowerCase()]   = attr;
-  }
+  CAMEL_CASED_ATTRIBUTE_NAMES.forEach(attr => {
+    const key = attr.toLowerCase();
+    ATTRIBUTE_TRANSLATIONS.write.names[key] = attr;
+    ATTRIBUTE_TRANSLATIONS.has.names[key]   = attr;
+  });
 
   // The rest of the oddballs.
   Object.extend(ATTRIBUTE_TRANSLATIONS.read.values, {
@@ -2513,11 +2501,11 @@
       return element;
     }
 
-    for ( let property in styles) {
+    for (let property in styles) {
+      const value = styles[ property ];
       if (property === 'opacity') {
-        Element.setOpacity(element, styles[property]);
+        Element.setOpacity(element, value);
       } else {
-        const value = styles[ property ];
         if (property === 'cssFloat') {
           property = 'float';
         }
@@ -2918,11 +2906,13 @@
    *  failure handler (since we didn't supply one).
   **/
   function addMethods(methods) {
+    let tagName;
+
     if (arguments.length === 0) addFormMethods();
 
     if (arguments.length === 2) {
       // Tag names have been specified.
-      var tagName = methods;
+      tagName = methods;
       methods = arguments[1];
     }
 
@@ -2940,7 +2930,7 @@
     mergeMethods(HTMLElement.prototype, Element.Methods);
     mergeMethods(HTMLElement.prototype, Element.Methods.Simulated, true);
 
-    for (var tag in Element.Methods.ByTag) {
+    for (let tag in Element.Methods.ByTag) {
       const klass = findDOMClass( tag );
       if (Object.isUndefined(klass)) continue;
       mergeMethods(klass.prototype, ByTag[tag]);
