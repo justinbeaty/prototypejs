@@ -67,7 +67,7 @@
       return window.parseFloat(value);
     }
 
-    var isPercentage = value.include('%');
+    var isPercentage = value.includes('%');
 
     // For other browsers, we have to do a bit of work.
     // (At this point, only percentages should be left; all other CSS units
@@ -81,11 +81,11 @@
       context = context || element.parentNode;
       var decimal = toDecimal(value), whole = null;
 
-      var isHorizontal = property.include('left') || property.include('right') ||
-       property.include('width');
+      var isHorizontal = property.includes('left') || property.includes('right') ||
+       property.includes('width');
 
-      var isVertical   = property.include('top') || property.include('bottom') ||
-        property.include('height');
+      var isVertical   = property.includes('top') || property.includes('bottom') ||
+        property.includes('height');
 
       if (context === document.viewport) {
         if (isHorizontal) {
@@ -123,7 +123,7 @@
   // Converts the layout hash property names back to the CSS equivalents.
   // For now, only the border properties differ.
   function cssNameFor(key) {
-    if (key.include('border')) key = key + '-width';
+    if (key.includes('border')) key = key + '-width';
     return key.camelize();
   }
 
@@ -427,10 +427,9 @@
     **/
     toObject: function() {
       var args = $A(arguments);
-      var keys = (args.length === 0) ? Element.Layout.PROPERTIES :
-       args.join(' ').split(' ');
+      var keys = (args.length === 0) ? Element.Layout.PROPERTIES : args.join(' ').split(' ');
       var obj = {};
-      keys.each( function(key) {
+      keys.forEach( function(key) {
         // Key needs to be a valid Element.Layout property.
         if (!Element.Layout.PROPERTIES.include(key)) return;
         var value = this.get(key);
@@ -476,11 +475,10 @@
     **/
     toCSS: function() {
       var args = $A(arguments);
-      var keys = (args.length === 0) ? Element.Layout.PROPERTIES :
-       args.join(' ').split(' ');
+      var keys = (args.length === 0) ? Element.Layout.PROPERTIES : args.join(' ').split(' ');
       var css = {};
 
-      keys.each( function(key) {
+      keys.forEach( function(key) {
         // Key needs to be a valid Element.Layout property...
         if (!Element.Layout.PROPERTIES.include(key)) return;
         // ...but not a composite property.

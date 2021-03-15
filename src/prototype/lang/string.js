@@ -327,7 +327,7 @@ Object.extend(String.prototype, (function() {
     var matchTypeAttribute = /type=/i;
 
     var results = [];
-    (this.match(matchAll) || []).each(function(scriptTag) {
+    (this.match(matchAll) || []).forEach(function(scriptTag) {
       var match = scriptTag.match(matchOne);
       var attributes = match[1];
       if (attributes !== '') {
