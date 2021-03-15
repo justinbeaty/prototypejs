@@ -17,10 +17,9 @@ Prototype 2.x targets modern, standard-compliant ES6 browsers.
 Using Prototype
 ---------------
 
-To use Prototype in your application, download the latest release from the 
-Prototype web site (<http://prototypejs.org/download>) and copy 
-`dist/prototype.js` to a suitable location. Then include it in your HTML
-like so:
+To use this version of Prototype in your application, at the moment you need
+to build it from source and copy `dist/prototype.js` to a suitable location.
+Then include it in your HTML like so:
 
     <script type="text/javascript" src="/path/to/prototype.js"></script>
 
