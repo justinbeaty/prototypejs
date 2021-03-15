@@ -235,18 +235,11 @@ Form.Methods = {
   **/
   getInputs: function(form, typeName, name) {
     form = $(form);
-    var inputs = form.getElementsByTagName('input');
+    const inputs = Array.from(form.querySelectorAll('input'));
 
-    if (!typeName && !name) return $A(inputs);
+    if (!typeName && !name) return inputs;
 
-    for (var i = 0, matchingInputs = [], length = inputs.length; i < length; i++) {
-      var input = inputs[i];
-      if ((typeName && input.type != typeName) || (name && input.name != name))
-        continue;
-      matchingInputs.push(input);
-    }
-
-    return matchingInputs;
+    return inputs.filter(input => (!typeName || input.type === typeName) && (!name || input.name === name));
   },
 
   /**

@@ -1010,7 +1010,7 @@
       div.innerHTML = html;
     }
 
-    return $A(div.childNodes);
+    return Array.from(div.childNodes);
   }
 
   /**
@@ -1412,7 +1412,7 @@
 
     // If selector is a string, we assume it's a CSS selector.
     if (Object.isString(selector))
-      return Prototype.Selector.match(element, selector);
+      return element.matches(selector);
 
     // Otherwise, we assume it's an object with its own `match` method.
     return selector.match(element);
@@ -1432,7 +1432,7 @@
       // Skip any non-element nodes.
       if (element.nodeType !== 1) continue;
       // Skip any nodes that don't match the expression, if there is one.
-      if (expression && !Prototype.Selector.match(element, expression))
+      if (expression && !element.matches(expression))
         continue;
       // Skip the first `index` matches we find.
       if (--index >= 0) continue;
@@ -1649,12 +1649,16 @@
   **/
   function down(element, expression, index) {
     if (arguments.length === 1) return firstDescendant(element);
-    element = $(element), expression = expression || 0, index = index || 0;
+    element = $(element);
+    expression = expression || 0;
+    index = index || 0;
 
-    if (Object.isNumber(expression))
-      index = expression, expression = '*';
+    if (Object.isNumber(expression)) {
+      index = expression;
+      expression = '*';
+    }
 
-    return Prototype.Selector.select(expression, element)[index];
+    return element.querySelectorAll(expression)[index];
   }
 
   /**
@@ -1921,7 +1925,7 @@
   function select(element) {
     element = $(element);
     const expressions = SLICE.call( arguments, 1 ).join( ', ' );
-    return Prototype.Selector.select(expressions, element);
+    return Array.from(element.querySelectorAll(expressions));
   }
 
   /**

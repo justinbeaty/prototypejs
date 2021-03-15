@@ -28,7 +28,8 @@
  *
  *  ##### Supported CSS syntax
  *
- *  The [[$$]] function is just a shorthand for the standard querySelectorAll().
+ *  The [[$$]] function is just a shorthand for the standard querySelectorAll(), returning an
+ *  array.
 **/
 var $$ = function() {
   return Array.from(document.querySelectorAll(Array.from(arguments).join(', ')));
@@ -49,7 +50,7 @@ Prototype.Selector = (function() {
    *  array of extended [[Element]] objects.
   **/
   function select(selector, scope) {
-    return $A((scope || document).querySelectorAll(selector));
+    return Array.from((scope || document).querySelectorAll(selector));
   }
 
   /**
@@ -75,11 +76,11 @@ Prototype.Selector = (function() {
   **/
   function find(elements, expression, index) {
     index = index || 0;
-    const match = Prototype.Selector.match, length = elements.length;
+    const length = elements.length;
     let matchIndex = 0;
 
     for (let i = 0; i < length; i++) {
-      if (match(elements[i], expression) && index == matchIndex++) {
+      if (elements[i].matches(expression) && index === matchIndex++) {
         return elements[i];
       }
     }
