@@ -3,10 +3,6 @@
 **/
 
 var Ajax = {
-  getTransport: function() {
-    return new XMLHttpRequest();
-  },
-
   /**
    *  Ajax.activeRequestCount -> Number
    *

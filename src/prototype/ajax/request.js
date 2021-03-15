@@ -172,7 +172,7 @@ Ajax.Request = Class.create(Ajax.Base, {
   **/
   initialize: function($super, url, options) {
     $super(options);
-    this.transport = Ajax.getTransport();
+    this.transport = new XMLHttpRequest();
     this.request(url);
   },
 
