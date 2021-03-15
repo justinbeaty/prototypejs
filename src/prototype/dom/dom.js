@@ -2303,6 +2303,15 @@
     return element;
   }
 
+  /**
+   *  Element.classNames(@element) -> [String...]
+   *
+   *  Returns an array of classnames.
+  **/
+  function classNames(element) {
+    return Array.from(element.classList);
+  }
+
   // Test attributes.
   const classProp = 'class';
   let forProp = 'for';
@@ -2443,7 +2452,8 @@
     hasClassName:    hasClassName,
     addClassName:    addClassName,
     removeClassName: removeClassName,
-    toggleClassName: toggleClassName
+    toggleClassName: toggleClassName,
+    classNames:      classNames
   });
 
 
