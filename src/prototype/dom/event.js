@@ -62,10 +62,6 @@
    *  different method of event registration, for whatever reason,you'll need to
    *  extend these events manually with [[Event.extend]].
   **/
-  var DIV = document.createElement('div');
-  var docEl = document.documentElement;
-  var MOUSEENTER_MOUSELEAVE_EVENTS_SUPPORTED = 'onmouseenter' in docEl
-   && 'onmouseleave' in docEl;
 
   var Event = {
     KEY_BACKSPACE: 8,
@@ -364,21 +360,6 @@
   Event.prototype = window.Event.prototype;
   Object.extend(Event.prototype, methods);
 
-  //
-  // EVENT REGISTRY
-  //
-  var EVENT_TRANSLATIONS = {
-    mouseenter: 'mouseover',
-    mouseleave: 'mouseout'
-  };
-
-  function getDOMEventName(eventName) {
-    return EVENT_TRANSLATIONS[eventName] || eventName;
-  }
-
-  if (MOUSEENTER_MOUSELEAVE_EVENTS_SUPPORTED)
-    getDOMEventName = Prototype.K;
-
   function getUniqueElementID(element) {
     if (element === window) return 0;
 
@@ -630,7 +611,7 @@
     if (entry === null) return element;
 
     var responder = entry.responder;
-    var actualEventName = isCustomEvent(eventName) ? 'dataavailable' : getDOMEventName(eventName);
+    var actualEventName = isCustomEvent(eventName) ? 'dataavailable' : eventName;
     element.addEventListener(actualEventName, responder, false);
 
     return element;
@@ -773,7 +754,7 @@
 
 
   function removeEvent(element, eventName, handler) {
-    const actualEventName = isCustomEvent(eventName) ? 'dataavailable' : getDOMEventName(eventName);
+    const actualEventName = isCustomEvent(eventName) ? 'dataavailable' : eventName;
     element.removeEventListener(actualEventName, handler, false);
   }
 
@@ -1132,9 +1113,6 @@
   else GLOBAL.Event = Event;
 
   GLOBAL.Event.cache = {};
-
-  DIV = null;
-  docEl = null;
 })(this);
 
 (function(GLOBAL) {
