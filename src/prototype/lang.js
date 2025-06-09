@@ -5,7 +5,6 @@
 //= require "lang/regexp"
 //= require "lang/periodical_executer"
 //= require "lang/string"
-//= require "lang/template"
 //= require "lang/enumerable"
 //= require "lang/array"
 //= require "lang/hash"
