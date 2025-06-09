@@ -175,9 +175,7 @@ function $w(string) {
 **/
 
 (function() {
-  var arrayProto = Array.prototype,
-      slice = arrayProto.slice,
-      _each = arrayProto.forEach; // use native browser JS 1.6 implementation if available
+  var arrayProto = Array.prototype;
 
   // Note that #map, #filter, #some, and #every take some extra steps for
   // ES5 compliance: the context in which they're called is coerced to an
@@ -187,7 +185,9 @@ function $w(string) {
   // This means that they behave a little differently from other methods in
   // `Enumerable`/`Array` that don't collide with ES5, but that's OK.
 
-  var filter = arrayProto.filter,
+  var each = arrayProto.forEach,
+      reverse = arrayProto.reverse,
+      filter = arrayProto.filter,
       map = wrapNative(arrayProto.map),
       some = wrapNative(arrayProto.some),
       every = wrapNative(arrayProto.every);
@@ -286,7 +286,7 @@ function $w(string) {
    *      // -> [3, 5]
   **/
   function without() {
-    var values = slice.call(arguments, 0);
+    var values = this.slice.call(arguments, 0);
     return this.filter( value => !values.includes(value));
   }
 
@@ -364,7 +364,7 @@ function $w(string) {
    *  Returns a duplicate of the array, leaving the original array intact.
   **/
   function clone() {
-    return slice.call(this, 0);
+    return this.slice.call(this, 0);
   }
 
   /** related to: Enumerable#size
@@ -416,7 +416,7 @@ function $w(string) {
         return method.call(this, Prototype.K);
       } else if (arguments[0] === undefined) {
         // Same as above.
-        var args = slice.call(arguments, 1);
+        var args = this.slice.call(arguments, 1);
         args.unshift(Prototype.K);
         return method.apply(this, args);
       } else {
@@ -426,25 +426,20 @@ function $w(string) {
     };
   }
 
-  // We used to define an `inject` method here that relied on ES5's
-  // `Array#reduce` (if present), but using `reduce` prevents us from
-  // catching a thrown `$break`. So arrays now use the standard
-  // `Enumerable.inject` like they did previously.
-
-  Object.extend(arrayProto, Enumerable);
-
-  // Enumerable's `entries` method is no longer safe to mixin to arrays, as
-  // it conflicts with an ES6 method. But it can still be mixed into other
+  // Some methods from Enumerable are no longer safe to mixin to arrays, as
+  // they conflicts with an ES6 method. But they can still be mixed into other
   // things.
-  if (arrayProto.entries === Enumerable.entries) {
-    delete arrayProto.entries;
+
+  const skipFromEnumerable = ['filter', 'entries', 'find'];
+  for (const [method, fn] of Object.entries(Enumerable)) {
+    if (!skipFromEnumerable.includes(method)) {
+      arrayProto[method] = fn;
+    }
   }
 
-  if (!arrayProto._reverse)
-    arrayProto._reverse = arrayProto.reverse;
-
   Object.extend(arrayProto, {
-    _each:     _each,
+    _each:     each,
+    _reverse:  reverse,
 
     map:       map,
     collect:   map,
